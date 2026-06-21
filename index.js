@@ -245,36 +245,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label for="res-skills">Skills (comma-separated)</label>
                 <input type="text" class="form-control" id="res-skills" value="UI UX Design, CSS Grid & Flexbox, JavaScript, Creative Styling, Product Mapping">
             </div>
-            <div class="form-group">
-                <label for="res-job-title">Job Position</label>
-                <input type="text" class="form-control" id="res-job-title" value="Lead UX Architect">
-            </div>
-            <div class="form-group">
-                <label for="res-job-company">Company</label>
-                <input type="text" class="form-control" id="res-job-company" value="Studio Nexus Inc.">
-            </div>
-            <div class="form-group">
-                <label for="res-job-dates">Employment Dates</label>
-                <input type="text" class="form-control" id="res-job-dates" value="2023 - Present">
-            </div>
-            <div class="form-group">
-                <label for="res-job-desc">Job Description</label>
-                <textarea class="form-control" id="res-job-desc">Spearheaded responsive front-end frameworks and coordinated layout visual mockups for client launches.</textarea>
-            </div>
 
-            <h4 style="margin:1.5rem 0 1rem 0; font-size:1rem; color:var(--primary);">Education</h4>
-            <div class="form-group">
-                <label for="res-edu-degree">Degree & Major</label>
-                <input type="text" class="form-control" id="res-edu-degree" value="B.Sc. in Digital Media Design">
-            </div>
-            <div class="form-group">
-                <label for="res-edu-school">School / University</label>
-                <input type="text" class="form-control" id="res-edu-school" value="State Tech Design Academy">
-            </div>
-            <div class="form-group">
-                <label for="res-edu-year">Graduation Year</label>
-                <input type="text" class="form-control" id="res-edu-year" value="2021">
-            </div>
+            <h4 style="margin:1.5rem 0 1rem 0; font-size:1rem; color:var(--primary);">Experience (repeatable)</h4>
+            <div id="resume-experience-items-list-container"></div>
+            <button class="btn btn-secondary btn-sm" id="btn-add-resume-experience" style="width: 100%; margin-top: 0.75rem;">
+                <i class="fa-solid fa-plus"></i> Add Experience
+            </button>
+
+            <h4 style="margin:1.5rem 0 1rem 0; font-size:1rem; color:var(--primary);">Education (repeatable)</h4>
+            <div id="resume-education-items-list-container"></div>
+            <button class="btn btn-secondary btn-sm" id="btn-add-resume-education" style="width: 100%; margin-top: 0.75rem;">
+                <i class="fa-solid fa-plus"></i> Add Education
+            </button>
+
+            <h4 style="margin:1.5rem 0 1rem 0; font-size:1rem; color:var(--primary);">Other Activities (repeatable)</h4>
+            <div id="resume-activity-items-list-container"></div>
+            <button class="btn btn-secondary btn-sm" id="btn-add-resume-activity" style="width: 100%; margin-top: 0.75rem;">
+                <i class="fa-solid fa-plus"></i> Add Activity
+            </button>
         `,
         menu: `
             <div class="form-group">
@@ -302,6 +290,29 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "Avocado Benedict", description: "Poached free-range eggs on toasted brioche with fresh avocado salsa.", price: "$16.50", category: "Main Course", type: "veg" },
         { name: "Crispy Duck Leg", description: "Slow-roasted duck leg served with sweet potato purée and orange glaze.", price: "$28.00", category: "Main Course", type: "non-veg" }
     ];
+
+    // Keep track of Resume repeatable sections in state
+    let resumeExperienceItems = [
+        {
+            position: "Lead UX Architect",
+            company: "Studio Nexus Inc.",
+            dates: "2023 - Present",
+            description: "Spearheaded responsive front-end frameworks and coordinated layout visual mockups for client launches."
+        }
+    ];
+
+    let resumeEducationItems = [
+        {
+            degree: "B.Sc. in Digital Media Design",
+            school: "State Tech Design Academy",
+            year: "2021"
+        }
+    ];
+
+    let resumeActivityItems = [
+        "Other Activities: Volunteered for community design workshops & mentored junior designers."
+    ];
+
 
     // Swapper functionality
     formatCards.forEach(card => {
@@ -337,8 +348,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 generateQRData();
             });
         }
+
+        if (format === 'resume') {
+            renderResumeExperienceItems();
+            renderResumeEducationItems();
+            renderResumeActivityItems();
+
+            const btnAddExp = document.getElementById('btn-add-resume-experience');
+            const btnAddEdu = document.getElementById('btn-add-resume-education');
+            const btnAddAct = document.getElementById('btn-add-resume-activity');
+
+            btnAddExp.addEventListener('click', () => {
+                resumeExperienceItems.push({ position: "", company: "", dates: "", description: "" });
+                renderResumeExperienceItems();
+                generateQRData();
+            });
+
+            btnAddEdu.addEventListener('click', () => {
+                resumeEducationItems.push({ degree: "", school: "", year: "" });
+                renderResumeEducationItems();
+                generateQRData();
+            });
+
+            btnAddAct.addEventListener('click', () => {
+                resumeActivityItems.push("");
+                renderResumeActivityItems();
+                generateQRData();
+            });
+        }
         
         if (format === 'pdf') {
+
             const pdfFileInput = document.getElementById('input-pdf-file');
             pdfFileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
@@ -467,6 +507,194 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ------------------------------
+    // Resume repeatable sections
+    // ------------------------------
+    function renderResumeExperienceItems() {
+        const listContainer = document.getElementById('resume-experience-items-list-container');
+        if (!listContainer) return;
+        listContainer.innerHTML = '';
+
+        resumeExperienceItems.forEach((item, index) => {
+            const itemBox = document.createElement('div');
+            itemBox.style.cssText = "background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; position: relative;";
+            itemBox.innerHTML = `
+                <button class="remove-resume-exp-item-btn" data-index="${index}" style="position:absolute; top:8px; right:8px; border:none; background:none; color:var(--accent-light); cursor:pointer; font-size:1rem;" aria-label="Remove experience">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+
+                <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label>Job Position</label>
+                    <input type="text" class="form-control resume-exp-position-in" data-index="${index}" value="${item.position || ''}" placeholder="e.g., Lead Designer">
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label>Company</label>
+                    <input type="text" class="form-control resume-exp-company-in" data-index="${index}" value="${item.company || ''}" placeholder="e.g., Studio Nexus">
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label>Employment Dates</label>
+                    <input type="text" class="form-control resume-exp-dates-in" data-index="${index}" value="${item.dates || ''}" placeholder="e.g., 2022 - Present">
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Description</label>
+                    <textarea class="form-control resume-exp-desc-in" data-index="${index}" placeholder="Describe your role...">${item.description || ''}</textarea>
+                </div>
+            `;
+            listContainer.appendChild(itemBox);
+        });
+
+        listContainer.querySelectorAll('.remove-resume-exp-item-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.getAttribute('data-index'));
+                resumeExperienceItems.splice(idx, 1);
+                renderResumeExperienceItems();
+                generateQRData();
+            });
+        });
+
+        listContainer.querySelectorAll('.resume-exp-position-in').forEach(input => {
+            input.addEventListener('input', () => {
+                const idx = parseInt(input.getAttribute('data-index'));
+                resumeExperienceItems[idx].position = input.value;
+                generateQRData();
+            });
+        });
+
+        listContainer.querySelectorAll('.resume-exp-company-in').forEach(input => {
+            input.addEventListener('input', () => {
+                const idx = parseInt(input.getAttribute('data-index'));
+                resumeExperienceItems[idx].company = input.value;
+                generateQRData();
+            });
+        });
+
+        listContainer.querySelectorAll('.resume-exp-dates-in').forEach(input => {
+            input.addEventListener('input', () => {
+                const idx = parseInt(input.getAttribute('data-index'));
+                resumeExperienceItems[idx].dates = input.value;
+                generateQRData();
+            });
+        });
+
+        listContainer.querySelectorAll('.resume-exp-desc-in').forEach(textarea => {
+            textarea.addEventListener('input', () => {
+                const idx = parseInt(textarea.getAttribute('data-index'));
+                resumeExperienceItems[idx].description = textarea.value;
+                generateQRData();
+            });
+        });
+    }
+
+    function renderResumeEducationItems() {
+        const listContainer = document.getElementById('resume-education-items-list-container');
+        if (!listContainer) return;
+        listContainer.innerHTML = '';
+
+        resumeEducationItems.forEach((item, index) => {
+            const itemBox = document.createElement('div');
+            itemBox.style.cssText = "background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; position: relative;";
+            itemBox.innerHTML = `
+                <button class="remove-resume-edu-item-btn" data-index="${index}" style="position:absolute; top:8px; right:8px; border:none; background:none; color:var(--accent-light); cursor:pointer; font-size:1rem;" aria-label="Remove education">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+
+                <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label>Degree & Major</label>
+                    <input type="text" class="form-control resume-edu-degree-in" data-index="${index}" value="${item.degree || ''}" placeholder="e.g., B.Sc. Computer Science">
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label>School / University</label>
+                    <input type="text" class="form-control resume-edu-school-in" data-index="${index}" value="${item.school || ''}" placeholder="e.g., State Tech University">
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Graduation Year</label>
+                    <input type="text" class="form-control resume-edu-year-in" data-index="${index}" value="${item.year || ''}" placeholder="e.g., 2021">
+                </div>
+            `;
+            listContainer.appendChild(itemBox);
+        });
+
+        listContainer.querySelectorAll('.remove-resume-edu-item-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.getAttribute('data-index'));
+                resumeEducationItems.splice(idx, 1);
+                renderResumeEducationItems();
+                generateQRData();
+            });
+        });
+
+        listContainer.querySelectorAll('.resume-edu-degree-in').forEach(input => {
+            input.addEventListener('input', () => {
+                const idx = parseInt(input.getAttribute('data-index'));
+                resumeEducationItems[idx].degree = input.value;
+                generateQRData();
+            });
+        });
+
+        listContainer.querySelectorAll('.resume-edu-school-in').forEach(input => {
+            input.addEventListener('input', () => {
+                const idx = parseInt(input.getAttribute('data-index'));
+                resumeEducationItems[idx].school = input.value;
+                generateQRData();
+            });
+        });
+
+        listContainer.querySelectorAll('.resume-edu-year-in').forEach(input => {
+            input.addEventListener('input', () => {
+                const idx = parseInt(input.getAttribute('data-index'));
+                resumeEducationItems[idx].year = input.value;
+                generateQRData();
+            });
+        });
+    }
+
+    function renderResumeActivityItems() {
+        const listContainer = document.getElementById('resume-activity-items-list-container');
+        if (!listContainer) return;
+        listContainer.innerHTML = '';
+
+        resumeActivityItems.forEach((itemText, index) => {
+            const itemBox = document.createElement('div');
+            itemBox.style.cssText = "background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; position: relative;";
+
+            itemBox.innerHTML = `
+                <button class="remove-resume-activity-item-btn" data-index="${index}" style="position:absolute; top:8px; right:8px; border:none; background:none; color:var(--accent-light); cursor:pointer; font-size:1rem;" aria-label="Remove activity">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Activity</label>
+                    <textarea class="form-control resume-activity-text-in" data-index="${index}" placeholder="Other activities / volunteering / projects...">${itemText || ''}</textarea>
+                </div>
+            `;
+
+            listContainer.appendChild(itemBox);
+        });
+
+        listContainer.querySelectorAll('.remove-resume-activity-item-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.getAttribute('data-index'));
+                resumeActivityItems.splice(idx, 1);
+                renderResumeActivityItems();
+                generateQRData();
+            });
+        });
+
+        listContainer.querySelectorAll('.resume-activity-text-in').forEach(textarea => {
+            textarea.addEventListener('input', () => {
+                const idx = parseInt(textarea.getAttribute('data-index'));
+                resumeActivityItems[idx] = textarea.value;
+                generateQRData();
+            });
+        });
+    }
+
+
     // Compile inputs and construct QR text payload
     function generateQRData() {
         let textPayload = "Welcome to QRStudio!";
@@ -536,13 +764,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     phone: document.getElementById('res-phone')?.value || '',
                     summary: document.getElementById('res-summary')?.value || '',
                     skills: document.getElementById('res-skills')?.value || '',
-                    jobTitle: document.getElementById('res-job-title')?.value || '',
-                    jobCompany: document.getElementById('res-job-company')?.value || '',
-                    jobDates: document.getElementById('res-job-dates')?.value || '',
-                    jobDesc: document.getElementById('res-job-desc')?.value || '',
-                    eduDegree: document.getElementById('res-edu-degree')?.value || '',
-                    eduSchool: document.getElementById('res-edu-school')?.value || '',
-                    eduYear: document.getElementById('res-edu-year')?.value || ''
+                    experience: resumeExperienceItems,
+                    education: resumeEducationItems,
+                    activities: resumeActivityItems
                 };
                 try {
                     // Safe UTF-8 Base64 serialization
