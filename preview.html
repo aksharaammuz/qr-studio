@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRStudio Preview - Digital Document Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Sharing same CSS variables, styles -->
+    <link rel="stylesheet" href="index.css">
+    <style>
+        /* Specific tweaks for preview layout */
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+        .preview-wrapper {
+            flex: 1;
+            padding: 4rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .preview-card {
+            width: 100%;
+            max-width: 800px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+        .preview-header-bar {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(var(--primary-rgb), 0.05);
+        }
+        .preview-actions-bar {
+            display: flex;
+            gap: 1rem;
+        }
+        .preview-content {
+            padding: 3rem 2.5rem;
+        }
+        
+        /* Digital Resume Preview Styling */
+        .resume-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+        .resume-header-info h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+        .resume-header-info h2 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .resume-contact-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        .resume-contact-grid span i {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+        .resume-layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.8fr;
+            gap: 3rem;
+        }
+        .resume-section-title {
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+        }
+        .resume-block {
+            margin-bottom: 1.5rem;
+        }
+        .resume-block h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .resume-block .timeline {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .skill-tag {
+            background: rgba(var(--primary-rgb), 0.1);
+            color: var(--primary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Restaurant Menu Preview Styling */
+        .menu-preview-header {
+            text-align: center;
+            border-bottom: 2px dashed var(--border-color);
+            padding-bottom: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .menu-preview-header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--text-primary);
+        }
+        .menu-preview-header p {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        .menu-category-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .menu-category-section {
+            margin-bottom: 3rem;
+        }
+        .menu-item-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .menu-item-info h4 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .menu-item-info p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .menu-item-price {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-light);
+        }
+        .diet-tag {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .diet-veg {
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+        .diet-nonveg {
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        /* Fallback Box */
+        .fallback-box {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        .fallback-box i {
+            font-size: 4rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        .fallback-box h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .resume-layout-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .resume-preview-header {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .preview-content {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="app-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-qrcode"></i></div>
+                <span>QR<span class="accent-text">Studio</span></span>
+            </a>
+            <div class="header-actions">
+                <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark/light theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <a href="index.html" class="btn btn-secondary btn-sm"><i class="fa-solid fa-house"></i> Home</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="preview-wrapper">
+        <div class="preview-card" id="main-preview-card">
+            
+            <!-- Actions Bar -->
+            <div class="preview-header-bar">
+                <span id="portal-tag" class="badge">Digital Portal</span>
+                <div class="preview-actions-bar">
+                    <button class="btn btn-secondary btn-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Content Output -->
+            <div class="preview-content" id="render-content">
+                <div class="loader-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading portal content...</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Minimal Footer -->
+    <footer class="app-footer" style="margin-top: auto; padding: 2rem 0; border-top: 1px solid var(--border-color);">
+        <div class="container footer-bottom-flex" style="padding-top: 0;">
+            <p>&copy; 2026 QRStudio. Generated dynamically.</p>
+            <p>Created by Akshara A (📞 +91 81118 25125)</p>
+        </div>
+    </footer>
+
+    <!-- Script to Parse URL Params and Render Page -->
+    <script>
+        // Dark/Light Theme Switching Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+
+        // Initialize Theme
+        const storedTheme = localStorage.getItem('theme') || 'dark';
+        root.setAttribute('data-theme', storedTheme);
+        updateThemeToggleIcon(storedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeToggleIcon(newTheme);
+        });
+
+        function updateThemeToggleIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            if (theme === 'dark') {
+                icon.className = 'fa-solid fa-sun';
+            } else {
+                icon.className = 'fa-solid fa-moon';
+            }
+        }
+
+        // Parsing and Unpacking Query Data
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const type = params.get('type');
+            const dataRaw = params.get('data');
+            const renderBox = document.getElementById('render-content');
+            const portalTag = document.getElementById('portal-tag');
+
+            if (!type || !dataRaw) {
+                renderFallback(renderBox);
+                return;
+            }
+
+            try {
+                // Decode from URI Safe Base64
+                const decodedJson = atob(decodeURIComponent(dataRaw));
+                const parsedData = JSON.parse(decodedJson);
+
+                if (type === 'resume') {
+                    portalTag.textContent = 'Digital Resume Portal';
+                    renderResume(renderBox, parsedData);
+                } else if (type === 'menu') {
+                    portalTag.textContent = 'Digital Menu Portal';
+                    renderMenu(renderBox, parsedData);
+                } else {
+                    renderFallback(renderBox);
+                }
+            } catch (err) {
+                console.error("Error parsing QR portal content:", err);
+                renderFallback(renderBox, "Failed to load content. The URL query parameter might be corrupted.");
+            }
+        });
+
+        function renderResume(container, data) {
+            const skillsHtml = data.skills 
+                ? data.skills.split(',').map(s => `<span class="skill-tag">${s.trim()}</span>`).join('') 
+                : '<span class="skill-tag">Design</span><span class="skill-tag">Development</span>';
+
+            container.innerHTML = `
+                <div class="resume-preview-header">
+                    <div class="resume-header-info">
+                        <h1>${data.name || 'John Doe'}</h1>
+                        <h2>${data.title || 'Creative Specialist'}</h2>
+                        <div class="resume-contact-grid">
+                            ${data.email ? `<span><i class="fa-solid fa-envelope"></i> ${data.email}</span>` : ''}
+                            ${data.phone ? `<span><i class="fa-solid fa-phone"></i> ${data.phone}</span>` : ''}
+                            ${data.website ? `<span><i class="fa-solid fa-globe"></i> ${data.website}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="resume-layout-grid">
+                    <div class="resume-col-left">
+                        <div class="resume-section">
+                            <h3 class="resume-section-title">About Me</h3>
+                            <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary); margin-bottom: 2rem;">
+                                ${data.summary || 'Detail-oriented professional with a focus on delivering high-quality user experiences and clean designs.'}
+                            </p>
+                        </div>
+                        <div class="resume-section">
+                            <h3 class="resume-section-title">Key Skills</h3>
+                            <div class="skills-list">
+                                ${skillsHtml}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resume-col-right">
+                        <div class="resume-section">
+                            <h3 class="resume-section-title">Experience</h3>
+                            <div class="resume-block">
+                                <h4>${data.jobTitle || 'Senior Architect'}</h4>
+                                <span class="timeline"><i class="fa-solid fa-building"></i> ${data.jobCompany || 'Acme Corp'} | ${data.jobDates || '2022 - Present'}</span>
+                                <p style="font-size: 0.95rem; line-height: 1.5; color: var(--text-secondary);">
+                                    ${data.jobDesc || 'Managed responsive UI development and built highly optimized modular components.'}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="resume-section" style="margin-top: 2rem;">
+                            <h3 class="resume-section-title">Education</h3>
+                            <div class="resume-block">
+                                <h4>${data.eduDegree || 'Bachelor of Science'}</h4>
+                                <span class="timeline"><i class="fa-solid fa-school"></i> ${data.eduSchool || 'State Tech University'} | Graduated ${data.eduYear || '2021'}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMenu(container, data) {
+            // Group items by category if possible
+            const items = data.items || [];
+            let itemsHtml = '';
+
+            if (items.length === 0) {
+                itemsHtml = `<p style="text-align: center; color: var(--text-secondary);">No menu items configured.</p>`;
+            } else {
+                // Categorize items
+                const categories = {};
+                items.forEach(item => {
+                    const cat = item.category || 'Main Course';
+                    if (!categories[cat]) categories[cat] = [];
+                    categories[cat].push(item);
+                });
+
+                for (const cat in categories) {
+                    itemsHtml += `
+                        <div class="menu-category-section">
+                            <h3 class="menu-category-title">
+                                <i class="fa-solid fa-utensils"></i> ${cat}
+                            </h3>
+                    `;
+                    
+                    categories[cat].forEach(item => {
+                        const vegTag = item.type === 'veg' 
+                            ? `<span class="diet-tag diet-veg"><i class="fa-solid fa-leaf"></i> Veg</span>` 
+                            : item.type === 'non-veg'
+                                ? `<span class="diet-tag diet-nonveg"><i class="fa-solid fa-circle"></i> Non-Veg</span>`
+                                : '';
+
+                        itemsHtml += `
+                            <div class="menu-item-row">
+                                <div class="menu-item-info">
+                                    <h4>${item.name || 'Delicious Dish'} ${vegTag}</h4>
+                                    <p>${item.description || 'Prepared fresh with premium hand-selected local ingredients.'}</p>
+                                </div>
+                                <div class="menu-item-price">${item.price || '$0.00'}</div>
+                            </div>
+                        `;
+                    });
+
+                    itemsHtml += `</div>`;
+                }
+            }
+
+            container.innerHTML = `
+                <div class="menu-preview-header">
+                    <h1>${data.restaurant || 'THE BRASSERIE'}</h1>
+                    <p>${data.subtitle || 'Fresh. Authentic. Gourmet.'}</p>
+                </div>
+                <div class="menu-body-wrapper">
+                    ${itemsHtml}
+                </div>
+            `;
+        }
+
+        function renderFallback(container, errorMsg = null) {
+            container.innerHTML = `
+                <div class="fallback-box">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <h2>No Portal Content Found</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        ${errorMsg || "The scan link does not contain any valid profile or menu configurations."}
+                    </p>
+                    <a href="index.html" class="btn btn-primary"><i class="fa-solid fa-house"></i> Launch QRStudio</a>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

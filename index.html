@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRStudio - Convert Anything into Custom QR Codes</title>
+    <meta name="description" content="Convert texts, links, WhatsApp messages, digital menus, resumes, and files into customized QR codes with premium themes, shapes, and real-life mockups.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="index.css">
+    <!-- QR Code Styling Library CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="app-header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-qrcode"></i></div>
+                <span>QR<span class="accent-text">Studio</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="#generator">Generator</a>
+                <a href="#customizer">Customizer</a>
+                <a href="#mockups">Real-Life Preview</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+            <div class="header-actions">
+                <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark/light theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <a href="#generator" class="btn btn-primary btn-sm hide-mobile">Create QR</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-background-glow"></div>
+        <div class="container hero-container">
+            <div class="hero-content scroll-fade">
+                <div class="badge">Next-Gen QR Creator</div>
+                <h1>Convert <span class="gradient-text">Anything</span> into Beautiful QR Codes</h1>
+                <p>Generate highly customized QR codes for websites, WiFi networks, digital menus, resume pages, and files. View them instantly on real-world mockups and export in vector formats.</p>
+                <div class="hero-actions-group">
+                    <a href="#generator" class="btn btn-primary btn-lg"><i class="fa-solid fa-wand-magic-sparkles"></i> Start Designing</a>
+                    <a href="#mockups" class="btn btn-secondary btn-lg"><i class="fa-solid fa-eye"></i> View Mockups</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-num">10+</span>
+                        <span class="stat-label">QR Formats</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num">4</span>
+                        <span class="stat-label">Style Presets</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num">6</span>
+                        <span class="stat-label">Real-Life Previews</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual scroll-fade">
+                <div class="hero-card-wrapper">
+                    <div class="floating-element float-1"><i class="fa-solid fa-wifi"></i></div>
+                    <div class="floating-element float-2"><i class="fa-solid fa-address-card"></i></div>
+                    <div class="floating-element float-3"><i class="fa-solid fa-utensils"></i></div>
+                    <div class="hero-qr-card">
+                        <div class="card-glow"></div>
+                        <div class="hero-qr-box">
+                            <!-- Renders a static cute/neon QR for decorative purposes -->
+                            <div id="hero-qr-placeholder"></div>
+                        </div>
+                        <div class="hero-qr-details">
+                            <span class="qr-tag">Custom Style Presets</span>
+                            <h4>Professional & Glowing</h4>
+                            <div class="qr-indicators">
+                                <span class="indicator active"></span>
+                                <span class="indicator"></span>
+                                <span class="indicator"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main QR Studio Generator Section -->
+    <section id="generator" class="generator-section">
+        <div class="container">
+            <div class="section-header scroll-fade">
+                <h2>Choose QR <span class="gradient-text">Format</span></h2>
+                <p>Select the content type you want to convert into a QR code. Dynamic resume and menu builders are built-in.</p>
+            </div>
+
+            <!-- Card Grid of 10 Formats -->
+            <div class="format-grid scroll-fade">
+                <!-- Text -->
+                <div class="format-card active" data-format="text">
+                    <div class="card-icon"><i class="fa-solid fa-align-left"></i></div>
+                    <h3>Plain Text</h3>
+                    <p>Plain text messages, notes, or raw content.</p>
+                </div>
+                <!-- Website URL -->
+                <div class="format-card" data-format="url">
+                    <div class="card-icon"><i class="fa-solid fa-link"></i></div>
+                    <h3>Website URL</h3>
+                    <p>Websites, landing pages, or online portals.</p>
+                </div>
+                <!-- Phone -->
+                <div class="format-card" data-format="phone">
+                    <div class="card-icon"><i class="fa-solid fa-phone"></i></div>
+                    <h3>Phone Call</h3>
+                    <p>Instantly trigger a call to your number.</p>
+                </div>
+                <!-- WhatsApp -->
+                <div class="format-card" data-format="whatsapp">
+                    <div class="card-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                    <h3>WhatsApp</h3>
+                    <p>Start a chat with a pre-filled text message.</p>
+                </div>
+                <!-- Email -->
+                <div class="format-card" data-format="email">
+                    <div class="card-icon"><i class="fa-solid fa-envelope"></i></div>
+                    <h3>Email</h3>
+                    <p>Compose an email with subject and body.</p>
+                </div>
+                <!-- WiFi -->
+                <div class="format-card" data-format="wifi">
+                    <div class="card-icon"><i class="fa-solid fa-wifi"></i></div>
+                    <h3>WiFi Network</h3>
+                    <p>Scan to automatically connect to WiFi.</p>
+                </div>
+                <!-- Social Media -->
+                <div class="format-card" data-format="social">
+                    <div class="card-icon"><i class="fa-solid fa-share-nodes"></i></div>
+                    <h3>Social Media</h3>
+                    <p>Link Instagram, LinkedIn, or YouTube.</p>
+                </div>
+                <!-- PDF -->
+                <div class="format-card" data-format="pdf">
+                    <div class="card-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                    <h3>PDF / Document</h3>
+                    <p>Share local files or hosted documents.</p>
+                </div>
+                <!-- Digital Resume -->
+                <div class="format-card" data-format="resume">
+                    <div class="card-icon"><i class="fa-solid fa-address-card"></i></div>
+                    <h3>Resume Page</h3>
+                    <p>Build a digital resume hosted directly in QR.</p>
+                </div>
+                <!-- Menu Card -->
+                <div class="format-card" data-format="menu">
+                    <div class="card-icon"><i class="fa-solid fa-utensils"></i></div>
+                    <h3>Menu Card</h3>
+                    <p>Create a beautiful digital restaurant menu.</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Form and Live Customizer/Preview Grid -->
+            <div id="customizer" class="app-workspace scroll-fade">
+                
+                <!-- Left Side: Inputs & Customizer -->
+                <div class="workspace-inputs">
+                    
+                    <!-- Dynamic Input Panel (Swaps forms here) -->
+                    <div class="panel form-panel">
+                        <h3 class="panel-title"><i class="fa-solid fa-keyboard"></i> Content Settings</h3>
+                        <div id="dynamic-form-container">
+                            <!-- Form templates injected here by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Customizer Options Panel -->
+                    <div class="panel options-panel">
+                        <h3 class="panel-title"><i class="fa-solid fa-sliders"></i> QR Design & Customization</h3>
+                        
+                        <!-- Style Presets -->
+                        <div class="option-group">
+                            <label class="group-label">Quick Style Presets</label>
+                            <div class="presets-grid">
+                                <button class="preset-btn active" data-preset="professional">
+                                    <span class="preset-dot prof"></span> Professional
+                                </button>
+                                <button class="preset-btn" data-preset="minimal">
+                                    <span class="preset-dot min"></span> Minimal
+                                </button>
+                                <button class="preset-btn" data-preset="neon">
+                                    <span class="preset-dot ne"></span> Neon Glow
+                                </button>
+                                <button class="preset-btn" data-preset="cute">
+                                    <span class="preset-dot cu"></span> Cute
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Colors Selection -->
+                        <div class="option-group">
+                            <label class="group-label">Color Schemes</label>
+                            <div class="color-options-row">
+                                <div class="color-picker-wrapper">
+                                    <label for="color-foreground">Dots Color</label>
+                                    <div class="picker-input-group">
+                                        <input type="color" id="color-foreground" value="#0f172a">
+                                        <input type="text" id="color-foreground-hex" value="#0f172a" maxlength="7">
+                                    </div>
+                                </div>
+                                <div class="color-picker-wrapper">
+                                    <label for="color-background">Background</label>
+                                    <div class="picker-input-group">
+                                        <input type="color" id="color-background" value="#ffffff">
+                                        <input type="text" id="color-background-hex" value="#ffffff" maxlength="7">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Gradient Option -->
+                            <div class="gradient-settings">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="enable-gradient">
+                                    <span class="checkmark"></span> Enable Gradient Dots
+                                </label>
+                                <div class="gradient-controls hidden" id="gradient-controls-box">
+                                    <div class="color-picker-wrapper">
+                                        <label for="color-gradient-to">Gradient Color To</label>
+                                        <div class="picker-input-group">
+                                            <input type="color" id="color-gradient-to" value="#6366f1">
+                                            <input type="text" id="color-gradient-to-hex" value="#6366f1" maxlength="7">
+                                        </div>
+                                    </div>
+                                    <div class="gradient-type-wrapper">
+                                        <label for="gradient-type">Gradient Type</label>
+                                        <select id="gradient-type">
+                                            <option value="linear" selected>Linear</option>
+                                            <option value="radial">Radial</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shapes Options -->
+                        <div class="option-group">
+                            <label class="group-label">QR Shapes & Corners</label>
+                            <div class="shapes-row">
+                                <div class="select-wrapper">
+                                    <label for="qr-dot-style">Dot Pattern</label>
+                                    <select id="qr-dot-style">
+                                        <option value="square" selected>Square</option>
+                                        <option value="dots">Dots</option>
+                                        <option value="rounded">Rounded</option>
+                                        <option value="extra-rounded">Extra Rounded</option>
+                                        <option value="classy">Classy</option>
+                                        <option value="classy-rounded">Classy Rounded</option>
+                                    </select>
+                                </div>
+                                <div class="select-wrapper">
+                                    <label for="qr-corner-style">Corner Squares</label>
+                                    <select id="qr-corner-style">
+                                        <option value="square" selected>Square</option>
+                                        <option value="dot">Rounded/Dot</option>
+                                        <option value="extra-rounded">Extra Rounded</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logo Placement -->
+                        <div class="option-group">
+                            <label class="group-label">Center Logo (Optional)</label>
+                            <div class="logo-uploader-box">
+                                <div class="logo-upload-btn-wrapper">
+                                    <button class="btn btn-secondary btn-sm" id="logo-upload-trigger">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Logo
+                                    </button>
+                                    <input type="file" id="logo-file-input" accept="image/*" class="hidden">
+                                </div>
+                                <span class="logo-info-text">PNG/JPG. Square ratio recommended.</span>
+                                <div id="logo-preview-badge" class="hidden">
+                                    <span id="logo-filename">logo.png</span>
+                                    <button id="remove-logo-btn" aria-label="Remove logo"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Live QR Preview & Actions -->
+                <div class="workspace-preview">
+                    <div class="panel preview-panel sticky-panel">
+                        <h3 class="panel-title"><i class="fa-solid fa-circle-check animate-pulse"></i> Live Output</h3>
+                        
+                        <!-- Real-time QR render box -->
+                   
+                            <div class="qr-render-frame">
+                                <div id="canvas-qr-code"></div>
+                        
+                            <div class="live-status-badge">
+                                
+                            </div>
+                        </div>
+
+                        <!-- Actions Grid -->
+                        <div class="preview-actions">
+                            <button id="btn-download-png" class="btn btn-primary"><i class="fa-solid fa-file-image"></i> Download PNG</button>
+                            <button id="btn-download-svg" class="btn btn-secondary"><i class="fa-solid fa-file-code"></i> Download SVG</button>
+                            <button id="btn-copy-link" class="btn btn-tertiary"><i class="fa-solid fa-copy"></i> Copy Scan Link</button>
+                        </div>
+                        
+                        <div class="scan-hint-text">
+                            <i class="fa-solid fa-mobile-screen-button"></i> Scan with your mobile camera to test.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-Life Previews Section -->
+    <section id="mockups" class="mockups-section">
+        <div class="container">
+            <div class="section-header scroll-fade">
+                <h2>Real-Life <span class="gradient-text">Previews</span></h2>
+                <p>Visualize how your customized QR code looks on premium everyday items and documents.</p>
+            </div>
+
+            <!-- Mockups Navigation/Tabs -->
+            <div class="mockup-tabs scroll-fade">
+                <button class="mockup-tab-btn active" data-mockup="business-card">
+                    <i class="fa-solid fa-address-card"></i> Business Card
+                </button>
+                <button class="mockup-tab-btn" data-mockup="resume">
+                    <i class="fa-solid fa-file-lines"></i> Resume Page
+                </button>
+                <button class="mockup-tab-btn" data-mockup="menu">
+                    <i class="fa-solid fa-utensils"></i> Menu Stand
+                </button>
+                <button class="mockup-tab-btn" data-mockup="poster">
+                    <i class="fa-solid fa-image"></i> Commercial Poster
+                </button>
+                <button class="mockup-tab-btn" data-mockup="mug">
+                    <i class="fa-solid fa-mug-hot"></i> Ceramic Mug
+                </button>
+                <button class="mockup-tab-btn" data-mockup="mobile">
+                    <i class="fa-solid fa-mobile-screen"></i> Mobile Screen
+                </button>
+            </div>
+
+            <!-- Mockup Canvas Frame -->
+            <div class="mockup-showcase scroll-fade">
+                <div class="mockup-viewport">
+                    
+                    <!-- 1. Business Card Mockup -->
+                    <div class="mockup-display active" id="mockup-business-card">
+                        <div class="business-card-design">
+                            <div class="card-left">
+                                <div class="card-logo">
+                                    <i class="fa-solid fa-cube"></i>
+                                    <span>NEXUS<span class="card-logo-accent">INC</span></span>
+                                </div>
+                                <div class="card-details">
+                                    <h4 class="card-holder-name">AKSHARA A</h4>
+                                    <p class="card-holder-title">Creative Director</p>
+                                    <div class="card-contact-info">
+                                        <span><i class="fa-solid fa-phone"></i> +91 81118 25125</span>
+                                        <span><i class="fa-solid fa-envelope"></i> contact@qrstudio.app</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-right">
+                                <div class="card-qr-box">
+                                    <img class="mockup-qr-image" src="" alt="Live QR Code">
+                                </div>
+                                <span class="card-scan-instruction">Scan for details</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Resume Mockup -->
+                    <div class="mockup-display" id="mockup-resume">
+                        <div class="resume-design-sheet">
+                            <header class="resume-sheet-header">
+                                <div class="header-main">
+                                    <h2 class="resume-sheet-name">AKSHARA A</h2>
+                                    <h5 class="resume-sheet-role">Digital Product Designer</h5>
+                                </div>
+                                <div class="resume-sheet-qr">
+                                    <div class="sheet-qr-box">
+                                        <img class="mockup-qr-image" src="" alt="Live QR Code">
+                                    </div>
+                                    <span class="sheet-qr-caption">Scan Portfolio</span>
+                                </div>
+                            </header>
+                            <div class="resume-sheet-body">
+                                <div class="resume-sheet-col-left">
+                                    <h4>Profile</h4>
+                                    <p>Highly motivated digital product designer with years of experience building responsive, beautiful websites. Expert in modern styling, UI UX animations, and mobile layouts.</p>
+                                    <h4>Skills</h4>
+                                    <ul>
+                                        <li>User Experience Design</li>
+                                        <li>Figma & Wireframing</li>
+                                        <li>HTML5 & CSS Grid/Flexbox</li>
+                                        
+                                    </ul>
+                                </div>
+                                <div class="resume-sheet-col-right">
+                                    <h4>Experience</h4>
+                                    <div class="resume-job">
+                                        <strong>Lead Designer</strong> — QRStudio Inc (2024 - Present)
+                                        <p>Developed dynamic theme-switching frameworks and standard CSS variables designs.</p>
+                                    </div>
+                                    <h4>Education</h4>
+                                    <div class="resume-job">
+                                        <strong>B.Sc. in Design</strong> — Creative Arts University (2020)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Menu Stand Mockup -->
+                    <div class="mockup-display" id="mockup-menu">
+                        <div class="menu-stand-container">
+                            <div class="wooden-base"></div>
+                            <div class="menu-stand-card">
+                                <div class="menu-header">
+                                    <span class="menu-subtitle">Welcome to</span>
+                                    <h3 class="menu-title">THE BRASSERIE</h3>
+                                    <div class="menu-decor-line"></div>
+                                </div>
+                                <div class="menu-items-mini">
+                                    <div class="mini-menu-item">
+                                        <span class="item-n">Artisanal Toast</span> <span class="item-p">$12</span>
+                                    </div>
+                                    <div class="mini-menu-item">
+                                        <span class="item-n">Avocado Benedict</span> <span class="item-p">$16</span>
+                                    </div>
+                                    <div class="mini-menu-item">
+                                        <span class="item-n">Matcha Latte</span> <span class="item-p">$6</span>
+                                    </div>
+                                </div>
+                                <div class="menu-stand-qr-section">
+                                    <div class="menu-qr-box">
+                                        <img class="mockup-qr-image" src="" alt="Live QR Code">
+                                    </div>
+                                    <span class="menu-qr-text">Scan for Full Menu & Ordering</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Poster Mockup -->
+                    <div class="mockup-display" id="mockup-poster">
+                        <div class="poster-mockup-frame">
+                            <div class="poster-content">
+                                <span class="poster-tag">EXCLUSIVE LAUNCH EVENT</span>
+                                <h2 class="poster-headline">CONNECT WITH US INSTANTLY</h2>
+                                <p class="poster-tagline">Scan the QR code below to access resources, downloads, tickets, and join our active discord community.</p>
+                                <div class="poster-qr-wrapper">
+                                    <div class="poster-qr-box">
+                                        <img class="mockup-qr-image" src="" alt="Live QR Code">
+                                    </div>
+                                </div>
+                                <div class="poster-footer">
+                                    <span>WWW.QRSTUDIO.APP</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Ceramic Mug Mockup -->
+                    <div class="mockup-display" id="mockup-mug">
+                        <div class="mug-scene">
+                            <div class="mug-handle"></div>
+                            <div class="mug-body">
+                                <div class="mug-glare"></div>
+                                <div class="mug-graphic">
+                                    <div class="mug-qr-box">
+                                        <img class="mockup-qr-image" src="" alt="Live QR Code">
+                                    </div>
+                                    <p class="mug-label">Scan while coffee is hot</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. Mobile Screen Mockup -->
+                    <div class="mockup-display" id="mockup-mobile">
+                        <div class="smartphone-frame">
+                            <div class="phone-speaker"></div>
+                            <div class="phone-camera"></div>
+                            <div class="phone-screen">
+                                <div class="phone-status-bar">
+                                    <span class="status-time">9:41</span>
+                                    <div class="status-icons">
+                                        <i class="fa-solid fa-signal"></i>
+                                        <i class="fa-solid fa-wifi"></i>
+                                        <i class="fa-solid fa-battery-three-quarters"></i>
+                                    </div>
+                                </div>
+                                <div class="phone-app-content">
+                                    <div class="app-header-mini">
+                                        <i class="fa-solid fa-ticket-simple"></i>
+                                        <span>Boarding Pass</span>
+                                    </div>
+                                    <div class="ticket-card">
+                                        <div class="ticket-flights">
+                                            <div class="airport">
+                                                <span class="code">NYC</span>
+                                                <span class="city">New York</span>
+                                            </div>
+                                            <div class="flight-arrow"><i class="fa-solid fa-plane"></i></div>
+                                            <div class="airport">
+                                                <span class="code">LDN</span>
+                                                <span class="city">London</span>
+                                            </div>
+                                        </div>
+                                        <div class="ticket-divider"></div>
+                                        <div class="ticket-qr-area">
+                                            <div class="phone-qr-box">
+                                                <img class="mockup-qr-image" src="" alt="Live QR Code">
+                                            </div>
+                                            <span class="ticket-scan-text">Present QR code at boarding gate</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="phone-home-indicator"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+        <div class="container">
+            <div class="section-header scroll-fade">
+                <h2>Frequently Asked <span class="gradient-text">Questions</span></h2>
+                <p>Have questions about how our QR codes work or what styles you should choose? We have answers.</p>
+            </div>
+
+            <div class="faq-accordion scroll-fade">
+                <!-- FAQ 1 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How do digital Resume and Menu QR codes work?</span>
+                        <span class="faq-icon"><i class="fa-solid fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>When you build a Resume or Menu Card, QRStudio encodes your form fields into a compressed format and passes it as a link inside the QR code. When scanned by a phone, the QR code redirects the scanner to our interactive preview page which unpacks the data and presents a gorgeous, responsive, digital page. Best of all, it is serverless and works anywhere!</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Are these QR codes permanent? Do they expire?</span>
+                        <span class="faq-icon"><i class="fa-solid fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No, the QR codes generated with QRStudio are static. They contain the embedded details directly (like WiFi data, URL links, or email addresses). Because the data is stored directly inside the code, they will never expire and will work forever.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What is the best file type to download?</span>
+                        <span class="faq-icon"><i class="fa-solid fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>If you're using the QR code on websites, digital screens, or emails, <strong>PNG</strong> is perfect. If you're printing the QR code on banners, posters, mugs, or business cards, we recommend downloading <strong>SVG</strong> because it's a vector format and can scale to any size without losing crispness.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How does the local PDF uploader generate a QR code?</span>
+                        <span class="faq-icon"><i class="fa-solid fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Our uploader allows you to upload a file (up to 1MB) which we convert into local data for immediate device testing. However, for a PDF QR code to work for external users scanning your physical QR code, we highly recommend inputting a public cloud URL (like Google Drive, Dropbox, or OneDrive share link) so scanners can download the PDF over the internet.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What customization styles scan best?</span>
+                        <span class="faq-icon"><i class="fa-solid fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>To ensure high scan reliability, always maintain high contrast between the foreground dots and the background. Avoid picking a background color that is too similar to the dots. A darker foreground on a lighter background scans the most consistently across all smartphones.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <div class="logo-icon"><i class="fa-solid fa-qrcode"></i></div>
+                    <span>QR<span class="accent-text">Studio</span></span>
+                </a>
+                <p>Convert anything into modern, highly-customized, brand-matching QR codes instantly.</p>
+                <div class="social-icons">
+                    <a href="https://instagram.com" target="_blank" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://linkedin.com" target="_blank" class="social-link" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://github.com" target="_blank" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#generator">QR Creator</a></li>
+                    <li><a href="#customizer">Customizer</a></li>
+                    <li><a href="#mockups">Mockup Viewports</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="mailto:contact@qrstudio.app">Contact Email</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contact Creator</h4>
+                <div class="creator-profile">
+                    <strong>AKSHARA A</strong>
+                    <a href="tel:+918111825125" class="creator-phone"><i class="fa-solid fa-phone"></i> +91 81118 25125</a>
+                    <p class="creator-sub">Available for freelance & custom integrations.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container footer-bottom-flex">
+                <p>&copy; 2026 QRStudio. All rights reserved.</p>
+                <p>Designed with <i class="fa-solid fa-heart accent-text animate-pulse"></i> for Akshara A.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript -->
+    <script src="index.js"></script>
+</body>
+</html>
