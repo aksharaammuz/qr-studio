@@ -342,9 +342,71 @@
         });
 
         function renderResume(container, data) {
-            const skillsHtml = data.skills 
-                ? data.skills.split(',').map(s => `<span class="skill-tag">${s.trim()}</span>`).join('') 
+            const skillsHtml = data.skills
+                ? data.skills.split(',').map(s => `<span class="skill-tag">${s.trim()}</span>`).join('')
                 : '<span class="skill-tag">Design</span><span class="skill-tag">Development</span>';
+
+            const experienceArr = Array.isArray(data.experience) ? data.experience : [];
+            const educationArr = Array.isArray(data.education) ? data.education : [];
+            const activitiesArr = Array.isArray(data.activities) ? data.activities : [];
+
+            // Back-compat fallback (old single fields)
+            const legacyExperience = (data.jobTitle || data.jobCompany || data.jobDates || data.jobDesc)
+                ? [{
+                    position: data.jobTitle || 'Senior Architect',
+                    company: data.jobCompany || 'Acme Corp',
+                    dates: data.jobDates || '2022 - Present',
+                    description: data.jobDesc || 'Managed responsive UI development and built highly optimized modular components.'
+                }]
+                : [];
+
+            const legacyEducation = (data.eduDegree || data.eduSchool || data.eduYear)
+                ? [{
+                    degree: data.eduDegree || 'Bachelor of Science',
+                    school: data.eduSchool || 'State Tech University',
+                    year: data.eduYear || '2021'
+                }]
+                : [];
+
+            const experienceToRender = experienceArr.length ? experienceArr : legacyExperience;
+            const educationToRender = educationArr.length ? educationArr : legacyEducation;
+
+            const experienceHtml = experienceToRender.length
+                ? experienceToRender.map(item => `
+                    <div class="resume-block">
+                        <h4>${item.position || 'Job Title'}</h4>
+                        <span class="timeline"><i class="fa-solid fa-building"></i> ${item.company || 'Company'} | ${item.dates || 'Dates'}</span>
+                        ${item.description
+                            ? `<p style="font-size: 0.95rem; line-height: 1.5; color: var(--text-secondary);">${item.description}</p>`
+                            : ''}
+                    </div>
+                `).join('')
+                : `<p style="color: var(--text-secondary);">No experience added.</p>`;
+
+            const educationHtml = educationToRender.length
+                ? educationToRender.map(item => `
+                    <div class="resume-block">
+                        <h4>${item.degree || 'Degree'}</h4>
+                        <span class="timeline"><i class="fa-solid fa-school"></i> ${item.school || 'School'} | Graduated ${item.year || ''}</span>
+                    </div>
+                `).join('')
+                : `<p style="color: var(--text-secondary);">No education added.</p>`;
+
+            const activitiesHtml = activitiesArr.length
+                ? `
+                    <div class="resume-section">
+                        <h3 class="resume-section-title">Other Activities</h3>
+                        ${activitiesArr.map(a => `
+                            <div class="resume-block">
+                                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary); margin-bottom: 0;">
+                                    <i class="fa-solid fa-check" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                                    ${a}
+                                </p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `
+                : '';
 
             container.innerHTML = `
                 <div class="resume-preview-header">
@@ -358,6 +420,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="resume-layout-grid">
                     <div class="resume-col-left">
                         <div class="resume-section">
@@ -366,6 +429,7 @@
                                 ${data.summary || 'Detail-oriented professional with a focus on delivering high-quality user experiences and clean designs.'}
                             </p>
                         </div>
+
                         <div class="resume-section">
                             <h3 class="resume-section-title">Key Skills</h3>
                             <div class="skills-list">
@@ -373,24 +437,19 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="resume-col-right">
                         <div class="resume-section">
                             <h3 class="resume-section-title">Experience</h3>
-                            <div class="resume-block">
-                                <h4>${data.jobTitle || 'Senior Architect'}</h4>
-                                <span class="timeline"><i class="fa-solid fa-building"></i> ${data.jobCompany || 'Acme Corp'} | ${data.jobDates || '2022 - Present'}</span>
-                                <p style="font-size: 0.95rem; line-height: 1.5; color: var(--text-secondary);">
-                                    ${data.jobDesc || 'Managed responsive UI development and built highly optimized modular components.'}
-                                </p>
-                            </div>
+                            ${experienceHtml}
                         </div>
+
                         <div class="resume-section" style="margin-top: 2rem;">
                             <h3 class="resume-section-title">Education</h3>
-                            <div class="resume-block">
-                                <h4>${data.eduDegree || 'Bachelor of Science'}</h4>
-                                <span class="timeline"><i class="fa-solid fa-school"></i> ${data.eduSchool || 'State Tech University'} | Graduated ${data.eduYear || '2021'}</span>
-                            </div>
+                            ${educationHtml}
                         </div>
+
+                        ${activitiesHtml}
                     </div>
                 </div>
             `;
