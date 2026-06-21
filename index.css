@@ -940,15 +940,17 @@ textarea.form-control {
 }
 
 .qr-render-frame {
-    background-color: #ffffff;
+    /* Make live QR background match the page (no white box behind QR) */
+    background-color: transparent;
     padding: 1.25rem;
     border-radius: var(--border-radius-md);
-    box-shadow: var(--shadow-md);
+    box-shadow: none;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
 }
+
 
 
 #canvas-qr-code {
